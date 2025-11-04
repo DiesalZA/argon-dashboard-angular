@@ -1,0 +1,18 @@
+// Stock Detail Component Styles
+
+.chart-canvas {
+  min-height: 350px;
+}
+
+.nav-pills .nav-link {
+  cursor: pointer;
+}
+
+.list-group-item {
+  border-left: 0;
+  border-right: 0;
+}
+
+.list-group-item:first-child {
+  border-top: 0;
+}

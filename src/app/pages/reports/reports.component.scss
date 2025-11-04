@@ -1,0 +1,36 @@
+// Reports Component Styles
+
+.nav-pills {
+  .nav-link {
+    border: 1px solid #dee2e6;
+    color: #525f7f;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: #f6f9fc;
+    }
+
+    &.active {
+      background-color: #5e72e4;
+      border-color: #5e72e4;
+      color: #fff;
+    }
+  }
+}
+
+.chart {
+  position: relative;
+  min-height: 350px;
+}
+
+.badge-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.progress {
+  background-color: #e9ecef;
+  border-radius: 0.25rem;
+}

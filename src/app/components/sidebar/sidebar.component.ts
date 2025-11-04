@@ -12,6 +12,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/tables', title: 'Holdings & Transactions',  icon:'ni-bullet-list-67 text-red', class: '' },
     { path: '/icons', title: 'Watchlist',  icon:'ni-collection text-blue', class: '' },
     { path: '/maps', title: 'Market Overview',  icon:'ni-chart-bar-32 text-orange', class: '' },
+    { path: '/reports', title: 'Reports & Analytics',  icon:'ni-single-copy-04 text-green', class: '' },
     { path: '/user-profile', title: 'Settings',  icon:'ni-settings-gear-65 text-yellow', class: '' }
 ];
 

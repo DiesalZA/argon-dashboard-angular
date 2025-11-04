@@ -1,0 +1,482 @@
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <!-- Header Stats -->
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Total Return</h5>
+                  <span class="h2 font-weight-bold mb-0">{{ formatCurrency(performanceMetrics.totalReturn) }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-success text-white rounded-circle shadow">
+                    <i class="fas fa-chart-line"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                <span class="text-success mr-2">
+                  <i class="fa fa-arrow-up"></i> {{ formatPercent(performanceMetrics.totalReturnPercent) }}
+                </span>
+                <span class="text-nowrap">Since inception</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Annualized Return</h5>
+                  <span class="h2 font-weight-bold mb-0">{{ formatPercent(performanceMetrics.annualizedReturn) }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                    <i class="fas fa-percent"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                <span class="text-nowrap">Compounded annual growth</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Sharpe Ratio</h5>
+                  <span class="h2 font-weight-bold mb-0">{{ performanceMetrics.sharpeRatio }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                    <i class="fas fa-balance-scale"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                <span class="text-nowrap">Risk-adjusted returns</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">Max Drawdown</h5>
+                  <span class="h2 font-weight-bold mb-0">{{ formatPercent(performanceMetrics.maxDrawdown) }}</span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                    <i class="fas fa-arrow-down"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                <span class="text-nowrap">Peak to trough decline</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Controls Row -->
+  <div class="row mb-4">
+    <div class="col-lg-6">
+      <div class="btn-group" role="group">
+        <button
+          *ngFor="let range of dateRanges"
+          type="button"
+          class="btn btn-sm"
+          [class.btn-primary]="dateRange === range.value"
+          [class.btn-outline-primary]="dateRange !== range.value"
+          (click)="changeDateRange(range.value)">
+          {{ range.label }}
+        </button>
+      </div>
+    </div>
+    <div class="col-lg-6 text-right">
+      <div ngbDropdown placement="bottom-right" class="d-inline-block">
+        <button class="btn btn-sm btn-success" ngbDropdownToggle>
+          <i class="fas fa-download"></i> Export
+        </button>
+        <div ngbDropdownMenu class="dropdown-menu-right">
+          <a class="dropdown-item" href="javascript:void(0)" (click)="exportReport('pdf')">
+            <i class="fas fa-file-pdf mr-2"></i> PDF Report
+          </a>
+          <a class="dropdown-item" href="javascript:void(0)" (click)="exportReport('csv')">
+            <i class="fas fa-file-csv mr-2"></i> CSV Data
+          </a>
+          <a class="dropdown-item" href="javascript:void(0)" (click)="exportReport('xlsx')">
+            <i class="fas fa-file-excel mr-2"></i> Excel Workbook
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <ul class="nav nav-pills nav-fill mb-4">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'performance'" href="javascript:void(0)" (click)="activeTab = 'performance'">
+        <i class="fas fa-chart-line mr-2"></i> Performance
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'allocation'" href="javascript:void(0)" (click)="activeTab = 'allocation'">
+        <i class="fas fa-chart-pie mr-2"></i> Allocation
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'holdings'" href="javascript:void(0)" (click)="activeTab = 'holdings'">
+        <i class="fas fa-briefcase mr-2"></i> Holdings
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'gains'" href="javascript:void(0)" (click)="activeTab = 'gains'">
+        <i class="fas fa-dollar-sign mr-2"></i> Gains & Losses
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'tax'" href="javascript:void(0)" (click)="activeTab = 'tax'">
+        <i class="fas fa-receipt mr-2"></i> Tax Summary
+      </a>
+    </li>
+  </ul>
+
+  <!-- Performance Tab -->
+  <div *ngIf="activeTab === 'performance'">
+    <div class="row">
+      <div class="col-xl-8">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Portfolio vs Benchmark</h3>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="performanceChart" style="height: 350px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Risk Metrics</h3>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-sm font-weight-bold">Volatility (StdDev)</span>
+                <span class="text-sm">{{ formatPercent(performanceMetrics.volatility) }}</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-warning" role="progressbar" [style.width.%]="performanceMetrics.volatility"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-sm font-weight-bold">Alpha</span>
+                <span class="text-sm text-success">{{ formatPercent(performanceMetrics.alpha) }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-sm font-weight-bold">Beta</span>
+                <span class="text-sm">{{ performanceMetrics.beta }}</span>
+              </div>
+            </div>
+            <hr class="my-3" />
+            <p class="text-sm text-muted mb-0">
+              <i class="fas fa-info-circle mr-2"></i>
+              These metrics compare your portfolio's risk and return characteristics against the S&P 500 benchmark.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Allocation Tab -->
+  <div *ngIf="activeTab === 'allocation'">
+    <div class="row">
+      <div class="col-xl-6">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Sector Allocation (Pie)</h3>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="allocationChart" style="height: 350px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Sector Allocation (Bar)</h3>
+          </div>
+          <div class="card-body">
+            <div class="chart">
+              <canvas id="sectorChart" style="height: 350px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-xl-12">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Sector Breakdown</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Sector</th>
+                  <th scope="col">Value</th>
+                  <th scope="col">Allocation</th>
+                  <th scope="col">Distribution</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sector of sectorAllocation">
+                  <th scope="row">
+                    <span class="badge badge-dot mr-4" [style.background-color]="sector.color"></span>
+                    {{ sector.sector }}
+                  </th>
+                  <td>{{ formatCurrency(sector.value) }}</td>
+                  <td>{{ formatPercent(sector.percent) }}</td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="progress flex-fill" style="height: 8px;">
+                        <div class="progress-bar" [style.background-color]="sector.color" [style.width.%]="sector.percent"></div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Holdings Tab -->
+  <div *ngIf="activeTab === 'holdings'">
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Top Holdings</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Symbol</th>
+                  <th scope="col">Company</th>
+                  <th scope="col">Value</th>
+                  <th scope="col">Portfolio %</th>
+                  <th scope="col">Return</th>
+                  <th scope="col">Allocation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let holding of topHoldings">
+                  <th scope="row">
+                    <span class="font-weight-bold">{{ holding.symbol }}</span>
+                  </th>
+                  <td>{{ holding.companyName }}</td>
+                  <td class="font-weight-bold">{{ formatCurrency(holding.value) }}</td>
+                  <td>{{ formatPercent(holding.percent) }}</td>
+                  <td [ngClass]="holding.returnPercent >= 0 ? 'text-success' : 'text-danger'">
+                    <i [class]="holding.returnPercent >= 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+                    {{ formatPercent(holding.returnPercent) }}
+                  </td>
+                  <td>
+                    <div class="progress" style="height: 8px;">
+                      <div class="progress-bar bg-primary" [style.width.%]="holding.percent"></div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gains & Losses Tab -->
+  <div *ngIf="activeTab === 'gains'">
+    <div class="row">
+      <div class="col-xl-6">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Realized Gains & Losses</h3>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="text-center">
+                  <h5 class="text-uppercase text-muted mb-0">Realized Gains</h5>
+                  <span class="h2 font-weight-bold text-success">{{ formatCurrency(gainsLosses.realizedGains) }}</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="text-center">
+                  <h5 class="text-uppercase text-muted mb-0">Realized Losses</h5>
+                  <span class="h2 font-weight-bold text-danger">{{ formatCurrency(gainsLosses.realizedLosses) }}</span>
+                </div>
+              </div>
+            </div>
+            <hr class="my-3" />
+            <p class="text-sm text-muted mb-0">
+              Realized gains and losses from closed positions.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Unrealized Gains & Losses</h3>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-6">
+                <div class="text-center">
+                  <h5 class="text-uppercase text-muted mb-0">Unrealized Gains</h5>
+                  <span class="h2 font-weight-bold text-success">{{ formatCurrency(gainsLosses.unrealizedGains) }}</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="text-center">
+                  <h5 class="text-uppercase text-muted mb-0">Unrealized Losses</h5>
+                  <span class="h2 font-weight-bold text-danger">{{ formatCurrency(gainsLosses.unrealizedLosses) }}</span>
+                </div>
+              </div>
+            </div>
+            <hr class="my-3" />
+            <p class="text-sm text-muted mb-0">
+              Unrealized gains and losses from current open positions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-xl-12">
+        <div class="card bg-gradient-success shadow">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <h5 class="card-title text-uppercase text-white mb-0">Net Gains</h5>
+                <span class="h2 font-weight-bold text-white mb-0">{{ formatCurrency(gainsLosses.netGains) }}</span>
+              </div>
+              <div class="col-auto">
+                <div class="icon icon-shape bg-white text-success rounded-circle shadow">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 mb-0 text-sm">
+              <span class="text-white">Total realized + unrealized gains/losses</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tax Summary Tab -->
+  <div *ngIf="activeTab === 'tax'">
+    <div class="row">
+      <div class="col-xl-8">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Tax Summary ({{ dateRange }})</h3>
+          </div>
+          <div class="card-body">
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="border-bottom pb-3 mb-3">
+                  <h5 class="text-sm text-muted mb-2">Short-term Capital Gains</h5>
+                  <h3 class="mb-0">{{ formatCurrency(taxSummary.shortTermGains) }}</h3>
+                  <small class="text-muted">Positions held &lt; 1 year</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border-bottom pb-3 mb-3">
+                  <h5 class="text-sm text-muted mb-2">Long-term Capital Gains</h5>
+                  <h3 class="mb-0">{{ formatCurrency(taxSummary.longTermGains) }}</h3>
+                  <small class="text-muted">Positions held &gt; 1 year</small>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="border-bottom pb-3 mb-3">
+                  <h5 class="text-sm text-muted mb-2">Dividend Income</h5>
+                  <h3 class="mb-0">{{ formatCurrency(taxSummary.dividendIncome) }}</h3>
+                  <small class="text-muted">Total dividends received</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="border-bottom pb-3 mb-3">
+                  <h5 class="text-sm text-muted mb-2">Estimated Tax Liability</h5>
+                  <h3 class="mb-0 text-danger">{{ formatCurrency(taxSummary.estimatedTaxLiability) }}</h3>
+                  <small class="text-muted">Based on realized gains</small>
+                </div>
+              </div>
+            </div>
+            <div class="alert alert-warning">
+              <strong>Disclaimer:</strong> This is an estimate only. Consult with a tax professional for accurate tax calculations. Tax rates vary by jurisdiction and individual circumstances.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Tax Documents</h3>
+          </div>
+          <div class="card-body">
+            <p class="text-sm text-muted mb-3">Download tax documents for filing:</p>
+            <button class="btn btn-outline-primary btn-block mb-2" disabled>
+              <i class="fas fa-file-pdf mr-2"></i> Form 1099-DIV
+            </button>
+            <button class="btn btn-outline-primary btn-block mb-2" disabled>
+              <i class="fas fa-file-pdf mr-2"></i> Form 1099-B
+            </button>
+            <button class="btn btn-outline-primary btn-block mb-2" disabled>
+              <i class="fas fa-file-pdf mr-2"></i> Tax Summary Report
+            </button>
+            <hr class="my-3" />
+            <p class="text-xs text-muted mb-0">
+              <i class="fas fa-info-circle mr-2"></i>
+              Tax documents will be available after year-end.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

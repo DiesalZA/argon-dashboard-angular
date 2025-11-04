@@ -143,6 +143,10 @@ export class TransactionFormComponent implements OnInit {
     this.calculateTotal();
   }
 
+  onDateChange(dateString: string) {
+    this.transaction.date = new Date(dateString);
+  }
+
   selectSymbol(symbol: string) {
     this.transaction.symbol = symbol;
   }

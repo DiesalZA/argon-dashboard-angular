@@ -128,7 +128,7 @@
                       id="input-date"
                       class="form-control form-control-alternative"
                       [ngModel]="transaction.date | date:'yyyy-MM-dd'"
-                      (ngModelChange)="transaction.date = $event"
+                      (ngModelChange)="onDateChange($event)"
                       name="date"
                       [class.is-invalid]="formErrors['date']">
                     <div class="invalid-feedback" *ngIf="formErrors['date']">

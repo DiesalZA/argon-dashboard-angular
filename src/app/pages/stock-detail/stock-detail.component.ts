@@ -103,14 +103,15 @@ export class StockDetailComponent implements OnInit {
   }
 
   initializeChart() {
-    const chartCanvas = document.getElementById('chart-stock-price');
+    const chartCanvas = document.getElementById('chart-stock-price') as HTMLCanvasElement;
     if (!chartCanvas) return;
 
     parseOptions(Chart, chartOptions());
 
     const data = this.historicalData[this.selectedTimeframe];
+    const ctx = chartCanvas.getContext('2d');
 
-    this.priceChart = new Chart(chartCanvas, {
+    this.priceChart = new Chart(ctx, {
       type: 'line',
       options: {
         scales: {

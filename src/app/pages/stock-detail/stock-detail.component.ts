@@ -160,7 +160,13 @@ export class StockDetailComponent implements OnInit {
   }
 
   formatDate(date: Date): string {
+    if (!date) {
+      return 'N/A';
+    }
     const d = new Date(date);
+    if (isNaN(d.getTime())) {
+      return 'Invalid Date';
+    }
     if (this.selectedTimeframe === '1D') {
       return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     } else if (this.selectedTimeframe === '1W' || this.selectedTimeframe === '1M') {

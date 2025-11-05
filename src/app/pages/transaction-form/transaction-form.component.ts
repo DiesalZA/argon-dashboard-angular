@@ -226,6 +226,9 @@ export class TransactionFormComponent implements OnInit {
   }
 
   formatCurrency(value: number): string {
+    if (value == null || typeof value !== 'number' || isNaN(value)) {
+      return '$0.00';
+    }
     return '$' + value.toFixed(2);
   }
 

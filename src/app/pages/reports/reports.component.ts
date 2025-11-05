@@ -167,8 +167,11 @@ export class ReportsComponent implements OnInit {
             label: function(tooltipItem, data) {
               const label = data.datasets[tooltipItem.datasetIndex].label || '';
               // Support both Chart.js 2.x (yLabel) and 3.x (parsed.y)
-              const value = tooltipItem.parsed ? tooltipItem.parsed.y : tooltipItem.yLabel;
-              return label + ': ' + value + '%';
+              const value = tooltipItem.parsed?.y ?? tooltipItem.yLabel;
+              if (typeof value === 'number' && !isNaN(value)) {
+                return label + ': ' + value + '%';
+              }
+              return label + ': 0%';
             }
           }
         }
@@ -257,8 +260,11 @@ export class ReportsComponent implements OnInit {
           callbacks: {
             label: function(tooltipItem) {
               // Support both Chart.js 2.x (yLabel) and 3.x (parsed.y)
-              const value = tooltipItem.parsed ? tooltipItem.parsed.y : tooltipItem.yLabel;
-              return '$' + value.toLocaleString();
+              const value = tooltipItem.parsed?.y ?? tooltipItem.yLabel;
+              if (typeof value === 'number' && !isNaN(value)) {
+                return '$' + value.toLocaleString();
+              }
+              return '$0';
             }
           }
         }

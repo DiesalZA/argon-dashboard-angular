@@ -332,12 +332,16 @@ export const chartExample2 = {
         label: function(item, data) {
           var label = data.datasets[item.datasetIndex].label || "";
           // Support both Chart.js 2.x (yLabel) and 3.x (parsed.y)
-          var yLabel = item.parsed ? item.parsed.y : item.yLabel;
+          var yLabel = item.parsed?.y ?? item.yLabel;
           var content = "";
           if (data.datasets.length > 1) {
             content += label;
           }
-          content += yLabel;
+          if (typeof yLabel === 'number' && !isNaN(yLabel)) {
+            content += yLabel;
+          } else {
+            content += '0';
+          }
           return content;
         }
       }

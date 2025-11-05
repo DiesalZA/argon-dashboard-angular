@@ -127,8 +127,11 @@ export class StockDetailComponent implements OnInit {
           callbacks: {
             label: function(tooltipItem, data) {
               // Support both Chart.js 2.x (yLabel) and 3.x (parsed.y)
-              const value = tooltipItem.parsed ? tooltipItem.parsed.y : tooltipItem.yLabel;
-              return '$' + value.toFixed(2);
+              const value = tooltipItem.parsed?.y ?? tooltipItem.yLabel;
+              if (typeof value === 'number' && !isNaN(value)) {
+                return '$' + value.toFixed(2);
+              }
+              return '$0.00';
             }
           }
         }

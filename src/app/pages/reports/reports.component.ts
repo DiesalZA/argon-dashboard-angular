@@ -166,7 +166,9 @@ export class ReportsComponent implements OnInit {
           callbacks: {
             label: function(tooltipItem, data) {
               const label = data.datasets[tooltipItem.datasetIndex].label || '';
-              return label + ': ' + tooltipItem.yLabel + '%';
+              // Support both Chart.js 2.x (yLabel) and 3.x (parsed.y)
+              const value = tooltipItem.parsed ? tooltipItem.parsed.y : tooltipItem.yLabel;
+              return label + ': ' + value + '%';
             }
           }
         }
@@ -254,7 +256,9 @@ export class ReportsComponent implements OnInit {
         tooltips: {
           callbacks: {
             label: function(tooltipItem) {
-              return '$' + tooltipItem.yLabel.toLocaleString();
+              // Support both Chart.js 2.x (yLabel) and 3.x (parsed.y)
+              const value = tooltipItem.parsed ? tooltipItem.parsed.y : tooltipItem.yLabel;
+              return '$' + value.toLocaleString();
             }
           }
         }

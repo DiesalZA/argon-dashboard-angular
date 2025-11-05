@@ -161,12 +161,13 @@ export class DashboardComponent implements OnInit {
     ];
     this.data = this.datasets[0];
 
-    var chartSectorAllocation = document.getElementById('chart-sector-allocation');
+    const chartSectorAllocation = document.getElementById('chart-sector-allocation') as HTMLCanvasElement;
 
     parseOptions(Chart, chartOptions());
 
     // Sector Allocation Bar Chart
-    var sectorChart = new Chart(chartSectorAllocation, {
+    const ctxSector = chartSectorAllocation.getContext('2d');
+    var sectorChart = new Chart(ctxSector, {
       type: 'bar',
       options: {
         ...chartExample2.options,
@@ -190,10 +191,11 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    var chartPortfolio = document.getElementById('chart-portfolio');
+    const chartPortfolio = document.getElementById('chart-portfolio') as HTMLCanvasElement;
 
     // Portfolio Performance Line Chart
-    this.portfolioChart = new Chart(chartPortfolio, {
+    const ctxPortfolio = chartPortfolio.getContext('2d');
+    this.portfolioChart = new Chart(ctxPortfolio, {
       type: 'line',
       options: {
         ...chartExample1.options,

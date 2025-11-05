@@ -2,12 +2,14 @@ export interface Portfolio {
   id: string;
   userId: string;
   name: string;
+  description?: string;
   totalValue: number;
   cashBalance: number;
   totalReturn: number;
   totalReturnPercent: number;
   dayChange: number;
   dayChangePercent: number;
+  createdDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
